@@ -15,8 +15,8 @@ class fenetre_jeu:
     def __init__(self):
         self.jeu = tk.Tk()
         self.jeu.title("Casse brique")
-        self.dimx = 700
-        self.dimy = 700
+        self.dimx = 900
+        self.dimy = 900
         self.jeu.geometry(f"{self.dimx}x{self.dimy}")
         self.jeu.config(cursor="circle")
         self.nb_carreaux_ligne = 8
@@ -30,12 +30,12 @@ class fenetre_jeu:
         self.points = tk.Label(self.jeu, text=f"Score : {self.score}")
         self.points.pack()
 
-        self.plateforme_jeu = tk.Canvas(self.jeu, bg='black', width=self.dimx, height=self.dimy)
+        self.plateforme_jeu = tk.Canvas(self.jeu, bg="#9AC387", width=self.dimx, height=self.dimy)
 
         self.balle=tp4_balle.balle(self.dimx,self.dimy)
         self.plateforme_jeu.create_oval(self.balle.x_init_balle - self.balle.taille_balle / 2, self.balle.y_init_balle - self.balle.taille_balle / 2, 
                                         self.balle.x_init_balle + self.balle.taille_balle / 2, self.balle.y_init_balle + self.balle.taille_balle / 2, 
-                                        fill="#EFA2D6", outline="#E7219C", width=2, tag='balle')
+                                        fill="#7414EA", outline="#FEFBFD", width=2, tag='balle')
         
         for i in range(self.nb_carreaux_ligne-1):
             for j in range(self.nb_carreaux_colonne):
@@ -45,7 +45,7 @@ class fenetre_jeu:
                     brique.ecart + j * (brique.largeur_rectangle + brique.ecart), 
                     brique.longueur_rectangle + i * (brique.longueur_rectangle + brique.ecart), 
                     brique.largeur_rectangle + j * (brique.largeur_rectangle + brique.ecart),
-                    fill="#C97EFD", outline="white", width=2, tag=f'brique{i}{j}')
+                    fill="#D508A9", outline="white", width=2, tag=f'brique{i}{j}')
         self.plateforme_jeu.pack()  
 
         self.raquette=tp4_raquette.raquette(self.dimx, self.dimy)
@@ -54,19 +54,29 @@ class fenetre_jeu:
             self.raquette.y_init_raquette-self.raquette.largeur_raquette,                 
             self.raquette.x_init_raquette+self.raquette.longueur_raquette, 
             self.raquette.y_init_raquette+self.raquette.largeur_raquette,
-            fill="#A47EFD", outline="black", width=2, tag=self.raquette)
-
-        def fermer_fenetre():
-            print("La fenêtre du jeu se ferme.")
-            self.jeu.destroy()
-
-        self.bouton_jouer = tk.Button(self.jeu, text="Jouer", command=fermer_fenetre, bg="#C5D6C4", fg="#207B6E",
-                                      activebackground="#25BDB8", activeforeground="white")  
-        self.bouton_jouer.pack(side=tk.LEFT, padx=10)
-        self.bouton_quitter = tk.Button(self.jeu, text='🚫', command=fermer_fenetre, bg="#C5D6C4", fg="#207B6E",
-                                        activebackground="#437541", activeforeground="white")  
+            fill="#FD7EDB", outline="white", width=2, tag=self.raquette)
+        self.lancer_jeu()
+        self.bouton_quitter = tk.Button(self.jeu, text='🚫', command=self.fermer_fenetre, bg="#C5D6C4", fg="#207B6E",
+                                                activebackground="#437541", activeforeground="white")  
         self.bouton_quitter.pack(side=tk.RIGHT, padx=10)
         self.jeu.mainloop()
+
+    def fermer_fenetre(self):
+        print("La fenêtre du jeu se ferme.")
+        self.jeu.destroy()
+
+    def lancer_jeu(self):
+        [dx, dy] = self.balle.deplacement()
+        self.plateforme_jeu.move('balle', dx, dy)
+        self.jeu.after(30, self.lancer_jeu) 
+
+        
+        """
+        #self.bouton_jouer = tk.Button(self.jeu, text="Jouer", command=lancer_jeu, bg="#C5D6C4", fg="#207B6E",
+                                      activebackground="#25BDB8", activeforeground="white")  
+        #self.bouton_jouer.pack(side=tk.LEFT, padx=10)
+        """
+    
 
 jeu=fenetre_jeu()
 
