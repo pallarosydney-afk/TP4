@@ -21,6 +21,14 @@ class fenetre_jeu:
         self.jeu.config(cursor="circle")
         self.nb_carreaux_ligne = 8
         self.nb_carreaux_colonne = 6
+        self.nb_vie_restantes = 3 
+        self.score = 0
+
+        self.points = tk.Label(self.jeu, text=f" Vies : {self.nb_vie_restantes}")
+        self.points.pack()
+
+        self.points = tk.Label(self.jeu, text=f"Score : {self.score}")
+        self.points.pack()
 
         self.plateforme_jeu = tk.Canvas(self.jeu, bg='black', width=self.dimx, height=self.dimy)
 
@@ -52,7 +60,7 @@ class fenetre_jeu:
             print("La fenêtre du jeu se ferme.")
             self.jeu.destroy()
 
-        self.bouton_jouer = tk.Button(self.jeu, text="Jouer", command=deplacement(self), bg="#C5D6C4", fg="#207B6E",
+        self.bouton_jouer = tk.Button(self.jeu, text="Jouer", command=fermer_fenetre, bg="#C5D6C4", fg="#207B6E",
                                       activebackground="#25BDB8", activeforeground="white")  
         self.bouton_jouer.pack(side=tk.LEFT, padx=10)
         self.bouton_quitter = tk.Button(self.jeu, text='🚫', command=fermer_fenetre, bg="#C5D6C4", fg="#207B6E",
