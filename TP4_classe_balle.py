@@ -13,7 +13,7 @@ class balle:
     def __init__(self, dimx, dimy):
         self.x_init_balle = dimx/2
         self.y_init_balle = dimy - dimy/6
-        self.vitesse_init_balle=5
+        self.vitesse_init_balle=-5
 
         self.dimx = dimx
         self.dimy = dimy
@@ -37,15 +37,13 @@ class balle:
         Output : Les coordonées de la balle déplacée
         Do : Fait bouger les coordonnées de la balle
         """
-        dimx = 900
-        dimy = 900
         #rebond à droite ou à gauche 
-        if self.x + self.rayon + self.dx > dimx or self.x - self.rayon + self.dx < 0: 
+        if self.x + self.rayon + self.dx > self.dimx or self.x - self.rayon + self.dx < 0: 
             self.vitesse_x = -self.vitesse_x
             self.dx = np.sin(self.angle)*self.vitesse_x
 
         #rebond en haut 
-        if self.y + self.rayon + self.dy > self.dimy : 
+        if self.y - self.rayon + self.dy < 0 : 
             self.vitesse_y = -self.vitesse_y
             self.dy = np.sin(self.angle)*self.vitesse_y
 

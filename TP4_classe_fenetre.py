@@ -55,28 +55,34 @@ class fenetre_jeu:
             self.raquette.x_init_raquette+self.raquette.longueur_raquette, 
             self.raquette.y_init_raquette+self.raquette.largeur_raquette,
             fill="#FD7EDB", outline="white", width=2, tag=self.raquette)
-        self.lancer_jeu()
+        
+        self.bouton_jouer = tk.Button(self.jeu, text="Jouer", command=self.lancer_jeu, bg="#C5D6C4", fg="#207B6E",
+                                      activebackground="#25BDB8", activeforeground="white")  
+        self.bouton_jouer.pack(side=tk.LEFT, padx=10)
+
         self.bouton_quitter = tk.Button(self.jeu, text='🚫', command=self.fermer_fenetre, bg="#C5D6C4", fg="#207B6E",
                                                 activebackground="#437541", activeforeground="white")  
         self.bouton_quitter.pack(side=tk.RIGHT, padx=10)
         self.jeu.mainloop()
 
     def fermer_fenetre(self):
+        """
+        Input : - 
+        Output : Ferme la fenêtre du jeu.
+        Do : Ferme la fenêtre du jeu. 
+        """
         print("La fenêtre du jeu se ferme.")
         self.jeu.destroy()
 
     def lancer_jeu(self):
+        """
+        Input : - 
+        Output : Lance le jeu.
+        Do : Met la balle en mouvement. 
+        """
         [dx, dy] = self.balle.deplacement()
         self.plateforme_jeu.move('balle', dx, dy)
         self.jeu.after(30, self.lancer_jeu) 
-
-        
-        """
-        #self.bouton_jouer = tk.Button(self.jeu, text="Jouer", command=lancer_jeu, bg="#C5D6C4", fg="#207B6E",
-                                      activebackground="#25BDB8", activeforeground="white")  
-        #self.bouton_jouer.pack(side=tk.LEFT, padx=10)
-        """
-    
 
 jeu=fenetre_jeu()
 
