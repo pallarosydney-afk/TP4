@@ -7,10 +7,9 @@ ToDo : ...
 
 import tkinter as tk 
 
-
 class raquette:
     def __init__(self, dimx, dimy):
-        self.longueur_raquette = dimx/50
-        self.largeur_raquette = dimy/70
+        self.longueur_raquette = dimx/15
+        self.largeur_raquette = dimy/110
         self.x_init_raquette = dimx/2
         self.y_init_raquette = dimy - dimy/8

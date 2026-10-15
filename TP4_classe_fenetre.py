@@ -8,14 +8,15 @@ ToDo : ...
 import tkinter as tk 
 import TP4_classe_brique as tp4_brique
 import TP4_classe_balle as tp4_balle
+import TP4_classe_raquette as tp4_raquette 
 
 
 class fenetre_jeu:
     def __init__(self):
         self.jeu = tk.Tk()
         self.jeu.title("Casse brique")
-        self.dimx = 900
-        self.dimy = 900
+        self.dimx = 700
+        self.dimy = 700
         self.jeu.geometry(f"{self.dimx}x{self.dimy}")
         self.jeu.config(cursor="circle")
         self.nb_carreaux_ligne = 8
@@ -23,7 +24,7 @@ class fenetre_jeu:
 
         self.plateforme_jeu = tk.Canvas(self.jeu, bg='black', width=self.dimx, height=self.dimy)
 
-        balle=tp4_balle(self.dimx,self.dimy)
+        balle=tp4_balle.balle(self.dimx,self.dimy)
         self.plateforme_jeu.create_oval(balle.x_init_balle - balle.taille_balle / 2, balle.y_init_balle - balle.taille_balle / 2, 
                                         balle.x_init_balle + balle.taille_balle / 2, balle.y_init_balle + balle.taille_balle / 2, 
                                         fill="#EFA2D6", outline="#E7219C", width=2, tag='balle')
@@ -38,6 +39,14 @@ class fenetre_jeu:
                     brique.largeur_rectangle + j * (brique.largeur_rectangle + brique.ecart),
                     fill="#C97EFD", outline="white", width=2, tag=f'brique{i}{j}')
         self.plateforme_jeu.pack()  
+
+        raquette=tp4_raquette.raquette(self.dimx, self.dimy)
+        self.plateforme_jeu.create_rectangle(
+            raquette.x_init_raquette-raquette.longueur_raquette, 
+            raquette.y_init_raquette-raquette.largeur_raquette,                 
+            raquette.x_init_raquette+raquette.longueur_raquette, 
+            raquette.y_init_raquette+raquette.largeur_raquette,
+            fill="#A47EFD", outline="black", width=2, tag=raquette)
 
         def fermer_fenetre():
             print("La fenêtre du jeu se ferme.")
