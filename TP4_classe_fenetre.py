@@ -1,15 +1,15 @@
 """
-Objectif du fichier : Faire les fonctions du TP4
+Objectif du fichier : Faire la classe de l'affichage du TP4
 Date : 08/10/2026
 Utilisateur :  Sydney Pallaro / Charline Talon 
 ToDo : ...
 """
 
 import tkinter as tk 
+import numpy as np 
 import TP4_classe_brique as tp4_brique
 import TP4_classe_balle as tp4_balle
 import TP4_classe_raquette as tp4_raquette 
-
 
 class fenetre_jeu:
     def __init__(self):
@@ -24,9 +24,9 @@ class fenetre_jeu:
 
         self.plateforme_jeu = tk.Canvas(self.jeu, bg='black', width=self.dimx, height=self.dimy)
 
-        balle=tp4_balle.balle(self.dimx,self.dimy)
-        self.plateforme_jeu.create_oval(balle.x_init_balle - balle.taille_balle / 2, balle.y_init_balle - balle.taille_balle / 2, 
-                                        balle.x_init_balle + balle.taille_balle / 2, balle.y_init_balle + balle.taille_balle / 2, 
+        self.balle=tp4_balle.balle(self.dimx,self.dimy)
+        self.plateforme_jeu.create_oval(self.balle.x_init_balle - self.balle.taille_balle / 2, self.balle.y_init_balle - self.balle.taille_balle / 2, 
+                                        self.balle.x_init_balle + self.balle.taille_balle / 2, self.balle.y_init_balle + self.balle.taille_balle / 2, 
                                         fill="#EFA2D6", outline="#E7219C", width=2, tag='balle')
         
         for i in range(self.nb_carreaux_ligne-1):
@@ -40,19 +40,19 @@ class fenetre_jeu:
                     fill="#C97EFD", outline="white", width=2, tag=f'brique{i}{j}')
         self.plateforme_jeu.pack()  
 
-        raquette=tp4_raquette.raquette(self.dimx, self.dimy)
+        self.raquette=tp4_raquette.raquette(self.dimx, self.dimy)
         self.plateforme_jeu.create_rectangle(
-            raquette.x_init_raquette-raquette.longueur_raquette, 
-            raquette.y_init_raquette-raquette.largeur_raquette,                 
-            raquette.x_init_raquette+raquette.longueur_raquette, 
-            raquette.y_init_raquette+raquette.largeur_raquette,
-            fill="#A47EFD", outline="black", width=2, tag=raquette)
+            self.raquette.x_init_raquette-self.raquette.longueur_raquette, 
+            self.raquette.y_init_raquette-self.raquette.largeur_raquette,                 
+            self.raquette.x_init_raquette+self.raquette.longueur_raquette, 
+            self.raquette.y_init_raquette+self.raquette.largeur_raquette,
+            fill="#A47EFD", outline="black", width=2, tag=self.raquette)
 
         def fermer_fenetre():
             print("La fenêtre du jeu se ferme.")
             self.jeu.destroy()
 
-        self.bouton_jouer = tk.Button(self.jeu, text="Jouer", command=fermer_fenetre, bg="#C5D6C4", fg="#207B6E",
+        self.bouton_jouer = tk.Button(self.jeu, text="Jouer", command=deplacement(self), bg="#C5D6C4", fg="#207B6E",
                                       activebackground="#25BDB8", activeforeground="white")  
         self.bouton_jouer.pack(side=tk.LEFT, padx=10)
         self.bouton_quitter = tk.Button(self.jeu, text='🚫', command=fermer_fenetre, bg="#C5D6C4", fg="#207B6E",
