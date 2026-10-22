@@ -37,11 +37,9 @@ class fenetre_jeu:
                                         self.balle.x_init_balle + self.balle.taille_balle / 2, self.balle.y_init_balle + self.balle.taille_balle / 2, 
                                         fill="#7414EA", outline="#FEFBFD", width=2, tag='balle')
 
-        position_brique_restante={}
         for i in range(self.nb_carreaux_ligne-1):
             for j in range(self.nb_carreaux_colonne):
                 brique=tp4_brique.brique(self.dimx, self.dimy, self.nb_carreaux_ligne, self.nb_carreaux_colonne)
-                self.briques_restantes[(i,j)]=1
                 self.plateforme_jeu.create_rectangle(
                     brique.ecart + i * (brique.longueur_rectangle + brique.ecart), 
                     brique.ecart + j * (brique.largeur_rectangle + brique.ecart), 
@@ -78,11 +76,27 @@ class fenetre_jeu:
         """
         Input : - 
         Output : Lance le jeu.
-        Do : Met la balle en mouvement. 
+        Do : Met la balle en mouvement dans le plateau de jeu. 
         """
+        x_balle_1, y_balle_1, x_balle_2, y_balle_2 = self.plateforme_jeu.coords('balle')
+
+        coords_raquette = self.plateforme_jeu.coords('raquette')
+ 
+        for i in range(self.nb_carreaux_ligne - 1):
+            for j in range(self.nb_carreaux_colonne):
+                brique = f'brique{i}{j}'      
+                coords_brique = self.plateforme_jeu.coords(brique) #récupération des coordonnées de la brique
+                if coords_brique:   #vérification qu'elle n'a pas été supprimée.
+                    x_brique_1, y_brique_1, x_brique_2, y_brique_2 = coords_brique
+                if (x_balle_2 >= x_brique_1 and x_balle_1 <= x_brique_2 and y_balle_2 >= y_brique_1 and y_balle_1 <= y_brique_2):
+                    self.plateforme_jeu.delete(brique)
+                    self.balle.dy = -self.balle.dy #changement de direction de la balle   
+                    self.balle.vitesse_x += 1
+                    self.balle.vitesse_y += 1
+
         [dx, dy] = self.balle.deplacement()
         self.plateforme_jeu.move('balle', dx, dy)
-        self.jeu.after(30, self.lancer_jeu) 
+        self.jeu.after(30, self.lancer_jeu)
 
     def mouv_raquette(self, event):
         """
@@ -100,7 +114,16 @@ class fenetre_jeu:
             if self.raquette.x2 + vitesse_raquette <= self.dimx:
                 self.raquette.deplacer(vitesse_raquette, self.dimx)
                 self.plateforme_jeu.move('raquette', vitesse_raquette, 0)
-        
+
+    def supprimer_brique(self, i, j):
+        """
+        Input : Les numéros d'une brique 
+        Output : Suppression de la brique 
+        Do : Supprime la brique numéro i,j
+        """
+        tag_brique = f'brique{i}{j}'
+        self.plateforme_jeu.delete(tag_brique)
+
 jeu=fenetre_jeu()
 
 
