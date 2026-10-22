@@ -36,10 +36,12 @@ class fenetre_jeu:
         self.plateforme_jeu.create_oval(self.balle.x_init_balle - self.balle.taille_balle / 2, self.balle.y_init_balle - self.balle.taille_balle / 2, 
                                         self.balle.x_init_balle + self.balle.taille_balle / 2, self.balle.y_init_balle + self.balle.taille_balle / 2, 
                                         fill="#7414EA", outline="#FEFBFD", width=2, tag='balle')
-        
+
+        position_brique_restante={}
         for i in range(self.nb_carreaux_ligne-1):
             for j in range(self.nb_carreaux_colonne):
                 brique=tp4_brique.brique(self.dimx, self.dimy, self.nb_carreaux_ligne, self.nb_carreaux_colonne)
+                self.briques_restantes[(i,j)]=1
                 self.plateforme_jeu.create_rectangle(
                     brique.ecart + i * (brique.longueur_rectangle + brique.ecart), 
                     brique.ecart + j * (brique.largeur_rectangle + brique.ecart), 
@@ -50,8 +52,9 @@ class fenetre_jeu:
 
         self.raquette = tp4_raquette.raquette(self.dimx, self.dimy)
         self.plateforme_jeu.create_rectangle(self.raquette.x1,self.raquette.y1,self.raquette.x2,self.raquette.y2,fill="#FD7EDB", outline="white", width=2, tag='raquette')
-
-        self.plateforme_jeu.bind("<Motion>", self.mettre_a_jour_coord_souris)
+        self.jeu.bind("<Left>", self.mouv_raquette)
+        self.jeu.bind("<Right>", self.mouv_raquette)
+        self.jeu.focus_set()
 
         self.bouton_jouer = tk.Button(self.jeu, text="Jouer", command=self.lancer_jeu, bg="#C5D6C4", fg="#207B6E",
                                       activebackground="#25BDB8", activeforeground="white")  
@@ -80,18 +83,24 @@ class fenetre_jeu:
         [dx, dy] = self.balle.deplacement()
         self.plateforme_jeu.move('balle', dx, dy)
         self.jeu.after(30, self.lancer_jeu) 
+
+    def mouv_raquette(self, event):
+        """
+        Input : - 
+        Output : Fait bouger la raquette avec le clavier
+        Do : 
+        """
+        vitesse_raquette = self.raquette.vitesse_raquette  
         
-
-    def mettre_a_jour_coord_souris(self, event):
-        """
-        Input : -
-        Ouput : Met à jour les coordonnées de la souris
-        """
-        self.souris_x = event.x
-        self.souris_y = event.y
-
-
-
+        if event.keysym == 'Left':
+            if self.raquette.x1 - vitesse_raquette >= 0:
+                self.raquette.deplacer(-vitesse_raquette, self.dimx)
+                self.plateforme_jeu.move('raquette', -vitesse_raquette, 0)
+        elif event.keysym == 'Right':
+            if self.raquette.x2 + vitesse_raquette <= self.dimx:
+                self.raquette.deplacer(vitesse_raquette, self.dimx)
+                self.plateforme_jeu.move('raquette', vitesse_raquette, 0)
+        
 jeu=fenetre_jeu()
 
 
