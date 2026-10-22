@@ -6,6 +6,7 @@ ToDo : ...
 """
 
 import tkinter as tk 
+from tkinter import messagebox
 import numpy as np 
 import TP4_classe_brique as tp4_brique
 import TP4_classe_balle as tp4_balle
@@ -76,27 +77,42 @@ class fenetre_jeu:
         """
         Input : - 
         Output : Lance le jeu.
-        Do : Met la balle en mouvement dans le plateau de jeu. 
+        Do : Met la balle en mouvement et gère  collisions. 
         """
-        x_balle_1, y_balle_1, x_balle_2, y_balle_2 = self.plateforme_jeu.coords('balle')
+        coords_balle = self.plateforme_jeu.coords('balle')
+        
+        if coords_balle:
+            x_balle_1, y_balle_1, x_balle_2, y_balle_2 = coords_balle
+            
+            if y_balle_2 >= self.dimy:
+                messagebox.showinfo("Perdu !", "Vous avez perdu. Dommage, revenez jouer quand vous serez moins nul !")
+                self.fermer_fenetre()
+                return  
 
-        coords_raquette = self.plateforme_jeu.coords('raquette')
- 
-        for i in range(self.nb_carreaux_ligne - 1):
-            for j in range(self.nb_carreaux_colonne):
-                brique = f'brique{i}{j}'      
-                coords_brique = self.plateforme_jeu.coords(brique) #récupération des coordonnées de la brique
-                if coords_brique:   #vérification qu'elle n'a pas été supprimée.
-                    x_brique_1, y_brique_1, x_brique_2, y_brique_2 = coords_brique
-                if (x_balle_2 >= x_brique_1 and x_balle_1 <= x_brique_2 and y_balle_2 >= y_brique_1 and y_balle_1 <= y_brique_2):
-                    self.plateforme_jeu.delete(brique)
-                    self.balle.dy = -self.balle.dy #changement de direction de la balle   
-                    self.balle.vitesse_x += 1
-                    self.balle.vitesse_y += 1
+            coords_raquette = self.plateforme_jeu.coords('raquette')
+            if coords_raquette:
+                x_raquette_1, y_raquette_1, x_raquette_2, y_raquette_2 = coords_raquette
+                if (x_balle_2 >= x_raquette_1 and x_balle_1 <= x_raquette_2 and y_balle_2 >= y_raquette_1 and y_balle_1 <= y_raquette_2):                    
+                    self.balle.dy = -self.balle.dy
+                    
+            for i in range(self.nb_carreaux_ligne - 1):
+                for j in range(self.nb_carreaux_colonne):
+                    brique = f'brique{i}{j}'      
+                    coords_brique = self.plateforme_jeu.coords(brique) 
+                    
+                    if coords_brique:   
+                        x_brique_1, y_brique_1, x_brique_2, y_brique_2 = coords_brique
+                        
+                        if (x_balle_2 >= x_brique_1 and x_balle_1 <= x_brique_2 and y_balle_2 >= y_brique_1 and y_balle_1 <= y_brique_2):
+                            self.score += 10
+                            self.plateforme_jeu.delete(brique)
+                            self.balle.dy = -self.balle.dy # changement de direction de la balle   
+                            break 
 
         [dx, dy] = self.balle.deplacement()
         self.plateforme_jeu.move('balle', dx, dy)
         self.jeu.after(30, self.lancer_jeu)
+
 
     def mouv_raquette(self, event):
         """
