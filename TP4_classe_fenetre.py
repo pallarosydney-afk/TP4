@@ -48,14 +48,11 @@ class fenetre_jeu:
                     fill="#D508A9", outline="white", width=2, tag=f'brique{i}{j}')
         self.plateforme_jeu.pack()  
 
-        self.raquette=tp4_raquette.raquette(self.dimx, self.dimy)
-        self.plateforme_jeu.create_rectangle(
-            self.raquette.x_init_raquette-self.raquette.longueur_raquette, 
-            self.raquette.y_init_raquette-self.raquette.largeur_raquette,                 
-            self.raquette.x_init_raquette+self.raquette.longueur_raquette, 
-            self.raquette.y_init_raquette+self.raquette.largeur_raquette,
-            fill="#FD7EDB", outline="white", width=2, tag=self.raquette)
-        
+        self.raquette = tp4_raquette.raquette(self.dimx, self.dimy)
+        self.plateforme_jeu.create_rectangle(self.raquette.x1,self.raquette.y1,self.raquette.x2,self.raquette.y2,fill="#FD7EDB", outline="white", width=2, tag='raquette')
+
+        self.plateforme_jeu.bind("<Motion>", self.mettre_a_jour_coord_souris)
+
         self.bouton_jouer = tk.Button(self.jeu, text="Jouer", command=self.lancer_jeu, bg="#C5D6C4", fg="#207B6E",
                                       activebackground="#25BDB8", activeforeground="white")  
         self.bouton_jouer.pack(side=tk.LEFT, padx=10)
@@ -83,6 +80,17 @@ class fenetre_jeu:
         [dx, dy] = self.balle.deplacement()
         self.plateforme_jeu.move('balle', dx, dy)
         self.jeu.after(30, self.lancer_jeu) 
+        
+
+    def mettre_a_jour_coord_souris(self, event):
+        """
+        Input : -
+        Ouput : Met à jour les coordonnées de la souris
+        """
+        self.souris_x = event.x
+        self.souris_y = event.y
+
+
 
 jeu=fenetre_jeu()
 
