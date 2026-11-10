@@ -27,7 +27,7 @@ class fenetre_jeu:
         self.dimx = 900
         self.dimy = 900
         self.jeu.geometry(f"{self.dimx}x{self.dimy}")
-        self.jeu.config(cursor="spider")
+        self.jeu.config(cursor="heart")
         self.nb_carreaux_ligne = 15
         self.nb_carreaux_colonne = 12
         self.score = 0
@@ -43,9 +43,9 @@ class fenetre_jeu:
         toutes_positions = [(i, j) for i in range(self.nb_carreaux_ligne) for j in range(self.nb_carreaux_colonne)]
         speciales = random.sample(toutes_positions, 2 + 3 + nb_jaunes)
         
-        self.briques_vertes = speciales[:2]
-        self.briques_petites = speciales[2:5]
-        self.briques_jaunes = speciales[5:]
+        self.brique_pour_rqt_grde = speciales[:2]
+        self.brique_pour_rqt_petite = speciales[2:5]
+        self.brique_changement_color = speciales[5:]
 
         self.label_vies = tk.Label(self.jeu, text=f"Nombre de vies : {self.vies}")
         self.label_vies.pack()
@@ -65,15 +65,15 @@ class fenetre_jeu:
                 brique = tp4_brique.brique(self.dimx, self.dimy, self.nb_carreaux_ligne, self.nb_carreaux_colonne)
                 
                 # Attribution des couleurs et des tags selon le type de brique
-                if (i, j) in self.briques_vertes:
+                if (i, j) in self.brique_pour_rqt_grde:
                     fill_col = "#2ECC71"
                     outline_col = "#27AE60"
-                    tag_brique = f'brique_verte_{i}_{j}'
-                elif (i, j) in self.briques_petites:
+                    tag_brique = f'brique_pour_rqt_grde_{i}_{j}'
+                elif (i, j) in self.brique_pour_rqt_petite:
                     fill_col = "#8E44AD"
                     outline_col = "#6C3483"
-                    tag_brique = f'brique_petite_{i}_{j}'
-                elif (i, j) in self.briques_jaunes:
+                    tag_brique = f'brique_pour_rqt_petite_{i}_{j}'
+                elif (i, j) in self.brique_changement_color:
                     fill_col = "#F1750F"
                     outline_col = "#F39C12"
                     tag_brique = f'brique_jaune_{i}_{j}'
@@ -138,8 +138,8 @@ class fenetre_jeu:
         
         for i in range(self.nb_carreaux_ligne):
             for j in range(self.nb_carreaux_colonne):
-                for prefix in ['brique', 'brique_verte', 'brique_petite', 'brique_jaune']:
-                    tag = f'{prefix}_{i}_{j}'
+                for type_brique in ['brique', 'brique_pour_rqt_grde', 'brique_pour_rqt_petite', 'brique_jaune']:
+                    tag = f'{type_brique}_{i}_{j}'
                     if self.plateforme_jeu.coords(tag):
                         self.plateforme_jeu.itemconfig(tag, fill="#424F43", outline="#424F43")
 
@@ -184,8 +184,8 @@ class fenetre_jeu:
         toutes_briques_detruites = True
         for i in range(self.nb_carreaux_ligne):
             for j in range(self.nb_carreaux_colonne):
-                for prefix in ['brique', 'brique_verte', 'brique_petite', 'brique_jaune']:
-                    brique_tag = f'{prefix}_{i}_{j}'      
+                for type_brique in ['brique', 'brique_pour_rqt_grde', 'brique_pour_rqt_petite', 'brique_jaune']:
+                    brique_tag = f'{type_brique}_{i}_{j}'      
                     coords_brique = self.plateforme_jeu.coords(brique_tag) 
                     
                     if coords_brique:   
@@ -204,7 +204,7 @@ class fenetre_jeu:
                             self.balle.vitesse_x += self.augmentation_vitesse
                             self.balle.vitesse_y += self.augmentation_vitesse
                             
-                            if prefix == 'brique_jaune':
+                            if type_brique == 'brique_jaune':
                                 if not self.arcade_mode:
                                     rand_color = f"#{random.randint(0, 255):02x}{random.randint(0, 255):02x}{random.randint(0, 255):02x}"
                                     self.plateforme_jeu.itemconfig('balle', fill=rand_color, outline=rand_color)
@@ -214,7 +214,7 @@ class fenetre_jeu:
                                 largeur = rx2 - rx1
                                 centre = (rx1 + rx2) / 2
                                 
-                                if prefix == 'brique_verte':
+                                if type_brique == 'brique_pour_rqt_grde':
                                     nouvelle_largeur = min(self.dimx, largeur + 60)
                                     rx1 = centre - nouvelle_largeur / 2
                                     rx2 = centre + nouvelle_largeur / 2
@@ -224,7 +224,7 @@ class fenetre_jeu:
                                     self.raquette.x1 = rx1
                                     self.raquette.x2 = rx2
                                     
-                                elif prefix == 'brique_petite':
+                                elif type_brique == 'brique_pour_rqt_petite':
                                     nouvelle_largeur = max(40, largeur - 60)
                                     rx1 = centre - nouvelle_largeur / 2
                                     rx2 = centre + nouvelle_largeur / 2
@@ -282,9 +282,9 @@ class fenetre_jeu:
         nb_jaunes = total_briques // 4
         toutes_positions = [(i, j) for i in range(self.nb_carreaux_ligne) for j in range(self.nb_carreaux_colonne)]
         speciales = random.sample(toutes_positions, 2 + 3 + nb_jaunes)
-        self.briques_vertes = speciales[:2]
-        self.briques_petites = speciales[2:5]
-        self.briques_jaunes = speciales[5:]
+        self.brique_pour_rqt_grde = speciales[:2]
+        self.brique_pour_rqt_petite = speciales[2:5]
+        self.brique_changement_color = speciales[5:]
         
         self.plateforme_jeu.config(bg="#9AC387")
         
@@ -303,20 +303,20 @@ class fenetre_jeu:
 
         for i in range(self.nb_carreaux_ligne):
             for j in range(self.nb_carreaux_colonne):
-                for prefix in ['brique', 'brique_verte', 'brique_petite', 'brique_jaune']:
-                    self.plateforme_jeu.delete(f'{prefix}_{i}_{j}')
+                for type_brique in ['brique', 'brique_pour_rqt_grde', 'brique_pour_rqt_petite', 'brique_jaune']:
+                    self.plateforme_jeu.delete(f'{type_brique}_{i}_{j}')
                 
                 brique = tp4_brique.brique(self.dimx, self.dimy, self.nb_carreaux_ligne, self.nb_carreaux_colonne)
                 
-                if (i, j) in self.briques_vertes:
+                if (i, j) in self.brique_pour_rqt_grde:
                     fill_col = "#2ECC71"
                     outline_col = "#27AE60"
-                    tag_brique = f'brique_verte_{i}_{j}'
-                elif (i, j) in self.briques_petites:
+                    tag_brique = f'brique_pour_rqt_grde_{i}_{j}'
+                elif (i, j) in self.brique_pour_rqt_petite:
                     fill_col = "#8E44AD"
                     outline_col = "#6C3483"
-                    tag_brique = f'brique_petite_{i}_{j}'
-                elif (i, j) in self.briques_jaunes:
+                    tag_brique = f'brique_pour_rqt_petite_{i}_{j}'
+                elif (i, j) in self.brique_changement_color:
                     fill_col = "#F1750F"
                     outline_col = "#F39C12"
                     tag_brique = f'brique_jaune_{i}_{j}'
@@ -357,7 +357,7 @@ class fenetre_jeu:
         Output : Suppression de la brique 
         Do : Supprime la brique numéro i,j
         """
-        for prefix in ['brique', 'brique_verte', 'brique_petite', 'brique_jaune']:
-            self.plateforme_jeu.delete(f'{prefix}_{i}_{j}')
+        for type_brique in ['brique', 'brique_pour_rqt_grde', 'brique_pour_rqt_petite', 'brique_jaune']:
+            self.plateforme_jeu.delete(f'{type_brique}_{i}_{j}')
 
 jeu = fenetre_jeu()

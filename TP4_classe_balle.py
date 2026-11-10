@@ -13,7 +13,7 @@ class balle:
     def __init__(self, dimx, dimy):
         self.x_init_balle = dimx/2
         self.y_init_balle = dimy - dimy/6
-        self.vitesse_init_balle=-5
+        self.vitesse_init_balle=8
 
         self.dimx = dimx
         self.dimy = dimy
@@ -24,8 +24,8 @@ class balle:
         self.x=self.x_init_balle #coordonnée horizontale de la balle à chaque instant
         self.y=self.y_init_balle #coordonnée verticale de la balle à chaque instant
         
-        self.vitesse_x=self.vitesse_init_balle
-        self.vitesse_y=self.vitesse_init_balle
+        self.vitesse_x=np.random.choice([-1, 1])*self.vitesse_init_balle
+        self.vitesse_y=np.random.choice([-1, 1])*self.vitesse_init_balle
         self.angle=np.pi/4 
 
         self.dx = np.cos(self.angle)*self.vitesse_x
